@@ -1,9 +1,12 @@
 .movieCard{
     border: solid black 2px;
     text-align: center;
+    width: 15rem;
 }
 .moviePoster{
     height: 80%;
+    width: 15rem;
+ 
 }
 .movieTitle{
     

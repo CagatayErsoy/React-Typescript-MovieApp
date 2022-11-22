@@ -18,13 +18,18 @@ const App: React.FC = () => {
   useEffect(() => {
     MovieServices.getMovies().then((res) => setMovies(res.data));
     MovieServices.getMovies().then((res) => setAllMovies(res.data));
+ 
+    
+  }, []);
+  useEffect(() => {
+  
     if(movieId){
       MovieServices.searchMovieById(movieId).then((res) => {
         setMovieDetail(res.data);
         
       });
     }
-  }, [movieDetail, movieId]);
+  }, [ movieId]);
  
   
   const getGenre = (genre: string) => {

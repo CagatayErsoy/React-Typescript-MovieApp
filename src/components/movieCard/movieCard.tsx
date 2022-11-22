@@ -17,7 +17,6 @@ const movieCard = (props: any) => {
       }}
     >
       <h3 className={styles.movieTitle}>{props.movie.title}</h3>
-      <p>{props.movie.id}</p>
       <img
         className={styles.moviePoster}
         src={imgUrl}
