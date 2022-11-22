@@ -49,7 +49,6 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <h1>Movies App</h1>
-      <p>{}</p>
       <SearchBar movies={movies} setMovies={setMovies} allMovies={allMovies} />
       <Dropdown allMovies={allMovies} getGenre={getGenre} />
       <MoviesList
