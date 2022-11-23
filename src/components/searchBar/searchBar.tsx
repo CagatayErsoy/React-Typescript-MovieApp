@@ -1,19 +1,9 @@
 import React from 'react'
 import styles from './searchBar.module.css'
-interface Props{
-  movies:any,
-  allMovies:any,
-  setMovies:React.Dispatch<React.SetStateAction<any>>
-}
 
-const searchBar = ({movies,allMovies,setMovies}:Props) => {
-    let searchResult:any=[] 
-     const  handleChange=(event:any)=>{
-      searchResult=[...allMovies].filter(movie=>{
-        return movie.title.toLowerCase().includes(event.target.value)
-        })
-        setMovies(searchResult)
-     }
+
+const searchBar = (props:any) => {
+    
     
   return (
     <div className={styles.input}>
@@ -22,8 +12,8 @@ const searchBar = ({movies,allMovies,setMovies}:Props) => {
       type="text" 
       placeholder="Search here"
    onChange={
-    (e)=>handleChange(e)}
-  //  value={searchInput} 
+    (e)=>props.handleChange(e)}
+  
    />
   <button className={styles.inputSubmit}></button>
     </div>

@@ -11,27 +11,35 @@ import useModal from "./hooks/modal";
 const App: React.FC = () => {
   const [movies, setMovies] = useState<Movies[]>([]);
   const [allMovies, setAllMovies] = useState<Movies[]>([]);
+  const [genreMovies, setGenreMovies] = useState<Movies[]>([]);
+  const [inputMovies, setInputMovies] = useState<Movies[]>([]);
   const { isOpen, toggle } = useModal();
-  const [movieDetail, setMovieDetail] = useState<any>();
-  const [movieId, setMovieId] = useState<string>();
- 
+  const [movieDetail, setMovieDetail] = useState<any>("");
+  const [movieId, setMovieId] = useState<string>("");
+
   useEffect(() => {
     MovieServices.getMovies().then((res) => setMovies(res.data));
     MovieServices.getMovies().then((res) => setAllMovies(res.data));
- 
     
+
   }, []);
   useEffect(() => {
-  
-    if(movieId){
+    
+    
+    if (isOpen) {
+      console.log("worked")
       MovieServices.searchMovieById(movieId).then((res) => {
         setMovieDetail(res.data);
         
       });
     }
-  }, [ movieId]);
- 
-  
+    
+  }, [movieId,isOpen]);
+
+
+
+  let searchResult: any = []
+
   const getGenre = (genre: string) => {
     let filtered = [...allMovies].filter((movie) => {
       if (genre === "All") {
@@ -40,23 +48,54 @@ const App: React.FC = () => {
         return movie.genres.includes(genre);
       }
     });
-    setMovies(filtered);
+    setInputMovies(filtered);
   };
+
+  const handleChange = (event: any) => {
+    searchResult = [...allMovies].filter(movie => {
+      return movie.title.toLowerCase().includes(event.target.value)
+    })
+    setGenreMovies(searchResult)
+  }
   const getMovieDetails = (id: string) => {
     setMovieId(id)
   };
+  useEffect(() => {
+    if (inputMovies.length > 0 && genreMovies.length < 1) {
+      setMovies(inputMovies)
+    }
+    else if (inputMovies.length < 1 && genreMovies.length > 0) {
+      setMovies(genreMovies)
+    } else if (
+      inputMovies.length > 0 && genreMovies.length > 0
+    ) {
+      let temp = [...inputMovies].concat(genreMovies)
+      let res = temp.filter((c, index) => {
+        return temp.indexOf(c) !== index;
+      });
+
+      setMovies(res)
+    }
+
+    
+
+  }, [inputMovies, genreMovies],);
+
+
+
+
 
   return (
     <div className="App">
       <h1>Movies App</h1>
-      <SearchBar movies={movies} setMovies={setMovies} allMovies={allMovies} />
+      <SearchBar handleChange={handleChange} />
       <Dropdown allMovies={allMovies} getGenre={getGenre} />
       <MoviesList
         movies={movies}
         handleClick={toggle}
         getMovieDetails={getMovieDetails}
       ></MoviesList>
-      <Modal isOpen={isOpen} toggle={toggle} movieDetail={movieDetail}></Modal>
+      {isOpen&&<Modal isOpen={isOpen} toggle={toggle} movieDetail={movieDetail}></Modal>}
     </div>
   );
 };
